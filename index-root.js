@@ -17,7 +17,7 @@ import {
 
 const array = [];
 for(var i = 0; i < 10000; i++) {
-  array.push({key: i});
+  array.push({key: i, randomHeightExtra: Math.random() * 60});
 }
 var {height, width} = Dimensions.get('window');
 
@@ -26,6 +26,7 @@ export default class rnPerformantListTest extends Component {
     super(props);
     this.state = {
       whichList: null,
+      array,
     }
   }
   reset() {
@@ -36,10 +37,11 @@ export default class rnPerformantListTest extends Component {
 
   scrollDeep() {
     if (this.refs.list) {
-      this.refs.list.scrollTo({
-        y: 10000 * 30, // Scroll deep in
-        animated: false,
-      })
+      // this.refs.list.scrollTo({
+      //   y: 10000 * 30 - height - 30, // Scroll deep in
+      //   animated: false,
+      // })
+      this.refs.list.scrollToEnd()
     }
     else {
       this.refs.flat.scrollToEnd()
@@ -70,21 +72,34 @@ export default class rnPerformantListTest extends Component {
         <TouchableOpacity onPress={() => this.scrollDeep()}>
           <Text style={styles.button}>ScrollDeep</Text>
         </TouchableOpacity>      
+        <TouchableOpacity onPress={() => {
+          // const array = this.state.array.slice();
+          const array = this.state.array;
+          // randomHeightExtra: Math.random() * 60
+          array.push({key: this.state.array.length, randomHeightExtra: Math.random() * 60});
+          this.setState({array});
+          this.scrollDeep()
+        }}>
+          <Text style={styles.button}>Add Item</Text>
+        </TouchableOpacity>        
       </View>
     );
 
     if (this.state.whichList === 'ListView') {
       const ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
-      const dataSource = ds.cloneWithRows(array);
+      const dataSource = ds.cloneWithRows(this.state.array);
       return (
         <View style={styles.container}>      
           {buttons}
           <ListView
             ref='list'          
-            initialListSize={array.length}
+            initialListSize={this.state.array.length}
             styles={{width, height}}        
             dataSource={dataSource}
-            renderRow={(item) => <Text style={styles.row}>{item.key}</Text>}
+            renderRow={(item) => {
+              console.log(item.key);
+              return <Text style={[styles.row, {height: item.randomHeightExtra + 30}]}>{item.key}</Text>
+            }}
           />      
         </View>
       );
@@ -97,8 +112,11 @@ export default class rnPerformantListTest extends Component {
         <FlatList
           ref='flat'        
           styles={{width, height}}
-          data={array}
-          renderItem={({item}) => <Text style={styles.row}>{item.key}</Text>}
+          data={this.state.array}
+          renderItem={({item}) =>  {
+            console.log(item.key);        
+            return <Text style={[styles.row, {height: item.randomHeightExtra + 30}]}>{item.key}</Text>}
+          }
         />
       </View>
     );
