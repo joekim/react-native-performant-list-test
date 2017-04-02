@@ -8,7 +8,6 @@ import {
   AppRegistry,
 } from 'react-native';
 
-
-import {rnPerformantListTest} from './index-root';
+import rnPerformantListTest from './index-root';
 
 AppRegistry.registerComponent('rnPerformantListTest', () => rnPerformantListTest);

@@ -16,7 +16,7 @@ import {
 } from 'react-native';
 
 const array = [];
-for(var i = 0; i < 10000; i++) {
+for(var i = 0; i < 1000; i++) {
   array.push({key: i, randomHeightExtra: Math.random() * 60});
 }
 var {height, width} = Dimensions.get('window');
@@ -97,7 +97,7 @@ export default class rnPerformantListTest extends Component {
             styles={{width, height}}        
             dataSource={dataSource}
             renderRow={(item) => {
-              console.log(item.key);
+              // console.log(item.key);
               return <Text style={[styles.row, {height: item.randomHeightExtra + 30}]}>{item.key}</Text>
             }}
           />      
@@ -114,7 +114,7 @@ export default class rnPerformantListTest extends Component {
           styles={{width, height}}
           data={this.state.array}
           renderItem={({item}) =>  {
-            console.log(item.key);        
+            // console.log(item.key);        
             return <Text style={[styles.row, {height: item.randomHeightExtra + 30}]}>{item.key}</Text>}
           }
         />
